@@ -21,6 +21,7 @@
 */
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController {
   
@@ -42,6 +43,16 @@ class LoginViewController: UIViewController {
   }
   
   @IBAction func loginDidTouch(_ sender: AnyObject) {
+    if nameField?.text != "" { // 1
+        FIRAuth.auth()?.signInAnonymously(completion: { (user, error) in // 2
+            if let err = error { // 3
+                print(err.localizedDescription)
+                return
+            }
+            
+            self.performSegue(withIdentifier: "LoginToChat", sender: nil) // 4
+        })
+    }
   }
   
   // MARK: - Notifications
