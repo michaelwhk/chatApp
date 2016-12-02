@@ -34,6 +34,9 @@ class ChannelListViewController: UITableViewController {
     var newChannelTextField: UITextField? // 2
     private var channels: [Channel] = [] // 3
     
+    private lazy var channelRef: FIRDatabaseReference = FIRDatabase.database().reference().child("channels")
+    private var channelRefHandle: FIRDatabaseHandle?
+    
     
     // MARK :Actions
     @IBAction func createChannel(_ sender: AnyObject) {
@@ -89,8 +92,7 @@ class ChannelListViewController: UITableViewController {
         }
     }
     
-    private lazy var channelRef: FIRDatabaseReference = FIRDatabase.database().reference().child("channels")
-    private var channelRefHandle: FIRDatabaseHandle?
+
     
     // MARK: Firebase related methods
     private func observeChannels() {
@@ -108,6 +110,8 @@ class ChannelListViewController: UITableViewController {
         })
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "RW RIC"
@@ -117,6 +121,19 @@ class ChannelListViewController: UITableViewController {
     deinit {
         if let refHandle = channelRefHandle {
             channelRef.removeObserver(withHandle: refHandle)
+        }
+    }
+    
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if let channel = sender as? Channel {
+            let chatVc = segue.destination as! ChatViewController
+            
+            chatVc.senderDisplayName = senderDisplayName
+            chatVc.channel = channel
+            chatVc.channelRef = channelRef.child(channel.id)
         }
     }
     
