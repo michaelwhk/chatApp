@@ -42,5 +42,7 @@
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We access your photos to attach images to meesages</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We access your camera to attach photos to meesages</string>
 </dict>
 </plist>
